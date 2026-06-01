@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yslep Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #fff1f2; }
+        ::-webkit-scrollbar-thumb { background: #fda4af; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-rose-50 text-rose-950 font-sans min-h-screen flex">
+
+    
+    <aside class="w-64 bg-white border-r border-rose-100 hidden md:flex flex-col shadow-sm">
+        <div class="p-6 border-b border-rose-50 flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center shadow-sm">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold text-rose-900">Yslep</h1>
+                <p class="text-xs font-bold text-red-400 tracking-wider uppercase">Admin Portal</p>
+            </div>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-bold transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Dashboard
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-rose-600 hover:bg-rose-50 hover:text-red-500 rounded-xl font-medium transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                Members Directory
+            </a>
+        </nav>
+        <div class="p-4 border-t border-rose-50 space-y-2">
+            <button onclick="goHome()" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-rose-600 hover:text-red-600 hover:bg-rose-50 transition rounded-xl">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 7v10a1 1 0 001 1h12a1 1 0 001-1V7M9 11l3 3m0 0l3-3m-3 3V8"></path></svg>
+                Home
+            </button>
+            <button onclick="adminLogout()" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-rose-400 hover:text-red-500 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Admin Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 sm:p-10 overflow-y-auto">
+        
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
+            <div>
+                <h2 class="text-3xl font-extrabold text-rose-900">Submission Overview</h2>
+                <p class="text-rose-500 mt-1">Review all uploaded files from members.</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-white border border-rose-200 text-rose-700 px-4 py-2 rounded-xl font-bold shadow-sm hover:border-red-300 transition">
+                    Export Data
+                </button>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-[1.5rem] shadow-sm border border-rose-100 flex items-center gap-4">
+                <div class="w-14 h-14 bg-red-50 text-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-rose-400 uppercase tracking-wider">Total Uploads</p>
+                    <h3 class="text-2xl font-extrabold text-rose-900" id="stat-total">0</h3>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-[1.5rem] shadow-sm border border-rose-100 flex items-center gap-4">
+                <div class="w-14 h-14 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-rose-400 uppercase tracking-wider">Parish Involvement</p>
+                    <h3 class="text-2xl font-extrabold text-rose-900" id="stat-parish">0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-[1.5rem] shadow-sm border border-rose-100 flex items-center gap-4">
+                <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-rose-400 uppercase tracking-wider">Social Apostolate</p>
+                    <h3 class="text-2xl font-extrabold text-rose-900" id="stat-social">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-[1.5rem] shadow-sm border border-rose-100 overflow-hidden">
+            <div class="p-6 border-b border-rose-50 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-rose-900">Recent Uploads</h3>
+                <input type="text" placeholder="Search members..." class="px-4 py-2 border border-rose-200 rounded-xl focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50 bg-rose-50/50 text-sm">
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-rose-50/50 text-rose-500 text-sm uppercase tracking-wider border-b border-rose-100">
+                            <th class="p-4 font-bold">Member Name</th>
+                            <th class="p-4 font-bold">Cycle</th>
+                            <th class="p-4 font-bold">Category</th>
+                            <th class="p-4 font-bold">Month</th>
+                            <th class="p-4 font-bold text-center">Uploaded Image</th>
+                            <th class="p-4 font-bold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-rose-50">
+                        <!-- Data will be populated here via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Image Modal (For viewing full size photos) -->
+    <div id="image-modal" class="hidden fixed inset-0 bg-rose-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="relative max-w-3xl w-full">
+            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white hover:text-red-400 transition bg-rose-900/50 rounded-full p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <img id="full-size-image" src="" class="w-full h-auto rounded-[1.5rem] shadow-2xl border-4 border-white">
+        </div>
+    </div>
+
+    <!-- Logic to render mock data -->
+    <script>
+        // Mock Data representing what would be fetched from a database
+        const mockUploads = [
+            { id: 1, name: "Maria Clara", cycle: "Cycle 1", category: "Social Apostolate", month: "June", image: "https://images.unsplash.com/photo-1593113565694-c8c360db2dc0?auto=format&fit=crop&w=400&q=80", status: "Reviewed" },
+            { id: 2, name: "Juan Dela Cruz", cycle: "Cycle 2", category: "Parish Involvement", month: "June", image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=400&q=80", status: "Pending" },
+            { id: 3, name: "Jose Rizal", cycle: "Cycle 1", category: "Social Apostolate", month: "May", image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=400&q=80", status: "Reviewed" },
+            { id: 4, name: "Andres Bonifacio", cycle: "Cycle 3", category: "Parish Involvement", month: "May", image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=400&q=80", status: "Pending" },
+        ];
+
+        // Update Statistics
+        document.getElementById('stat-total').textContent = mockUploads.length;
+        document.getElementById('stat-parish').textContent = mockUploads.filter(u => u.category === "Parish Involvement").length;
+        document.getElementById('stat-social').textContent = mockUploads.filter(u => u.category === "Social Apostolate").length;
+
+        // Render Table Data
+        const tableBody = document.getElementById('table-body');
+
+        mockUploads.forEach(upload => {
+            const statusColor = upload.status === "Reviewed" ? "bg-emerald-100 text-emerald-700" : "bg-yellow-100 text-yellow-700";
+            const categoryBadge = upload.category === "Parish Involvement" ? "bg-rose-100 text-rose-700" : "bg-red-100 text-red-700";
+
+            const row = document.createElement('tr');
+            row.className = "hover:bg-rose-50/30 transition text-rose-900";
+            row.innerHTML = `
+                <td class="p-4 font-bold">${upload.name}</td>
+                <td class="p-4 text-sm font-medium text-rose-600">${upload.cycle}</td>
+                <td class="p-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold ${categoryBadge}">${upload.category}</span>
+                </td>
+                <td class="p-4 font-medium">${upload.month}</td>
+                <td class="p-4 flex justify-center">
+                    <img src="${upload.image}" alt="Service Photo" onclick="openImageModal('${upload.image}')" class="w-16 h-12 object-cover rounded-lg border border-rose-200 cursor-pointer hover:border-red-400 hover:shadow-md transition">
+                </td>
+                <td class="p-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${upload.status}</span>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Image Modal Logic
+        const imageModal = document.getElementById('image-modal');
+        const fullSizeImage = document.getElementById('full-size-image');
+
+        function openImageModal(imgSrc) {
+            fullSizeImage.src = imgSrc;
+            imageModal.classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            imageModal.classList.add('hidden');
+            fullSizeImage.src = "";
+        }
+
+        // Admin Portal Navigation Functions
+        function goHome() {
+            if (confirm('Return to home? Your session will end.')) {
+                sessionStorage.removeItem('adminAccess');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function adminLogout() {
+            if (confirm('Are you sure you want to logout? You will need to re-enter the admin password.')) {
+                sessionStorage.removeItem('adminAccess');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Verify admin access on page load
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem('adminAccess') !== 'true') {
+                // Redirect to home if no admin session
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
