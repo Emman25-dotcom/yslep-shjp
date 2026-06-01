@@ -84,13 +84,11 @@
         <!-- Cycle Members Display -->
         <div class="bg-gradient-to-br from-red-500 to-rose-600 p-6 rounded-[2rem] shadow-lg text-white">
             <h3 class="text-lg font-bold mb-3">Your Cycle Members</h3>
-            <p class="text-rose-100 text-sm mb-4">You are combined with other members in <span id="cycle-team-name" class="font-bold text-white"></span>.</p>
-            <!-- Mock profiles to show community combining -->
-            <div class="flex -space-x-3">
-                <img class="w-10 h-10 rounded-full border-2 border-red-500 object-cover" src="https://i.pravatar.cc/100?img=1" alt="Member">
-                <img class="w-10 h-10 rounded-full border-2 border-red-500 object-cover" src="https://i.pravatar.cc/100?img=5" alt="Member">
-                <img class="w-10 h-10 rounded-full border-2 border-red-500 object-cover" src="https://i.pravatar.cc/100?img=9" alt="Member">
-                <div class="w-10 h-10 rounded-full border-2 border-red-500 bg-red-700 flex items-center justify-center text-xs font-bold">+12</div>
+            <p class="text-rose-100 text-sm mb-4">You are in <span id="cycle-team-name" class="font-bold text-white"></span>. Your cycle members will sync here.</p>
+            <!-- Members avatars section -->
+            <div class="flex items-center -space-x-3">
+                <img id="member-avatar" class="w-10 h-10 rounded-full border-2 border-red-500 object-cover" src="" alt="You">
+                <div class="w-10 h-10 rounded-full border-2 border-red-500 bg-red-700 flex items-center justify-center text-xs font-bold text-white">+0</div>
             </div>
         </div>
 
@@ -233,10 +231,21 @@
             
             memberUploads.forEach((upload, index) => {
                 const categoryBadge = upload.category === 'Parish Involvement' ? 'bg-rose-100 text-rose-700' : 'bg-red-100 text-red-700';
+                
+                // Format date and time
+                const uploadDate = new Date(upload.uploadedAt);
+                const formattedDate = uploadDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                const formattedTime = uploadDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                
                 const uploadCard = document.createElement('div');
                 uploadCard.className = 'bg-rose-50 rounded-2xl overflow-hidden border border-rose-100 hover:shadow-md transition';
                 uploadCard.innerHTML = `
-                    <img src="${upload.image}" alt="Upload" class="w-full h-40 object-cover cursor-pointer hover:opacity-80 transition" onclick="viewUploadImage('${upload.image}')">
+                    <div class="relative">
+                        <img src="${upload.image}" alt="Upload" class="w-full h-40 object-cover cursor-pointer hover:opacity-80 transition" onclick="viewUploadImage('${upload.image}')">
+                        <div class="absolute top-2 left-2 bg-rose-900/70 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+                            ${formattedDate} ${formattedTime}
+                        </div>
+                    </div>
                     <div class="p-4">
                         <span class="inline-block px-3 py-1 rounded-full text-xs font-bold ${categoryBadge} mb-2">${upload.category}</span>
                         <p class="text-sm font-bold text-rose-900 mb-1">${upload.month}</p>
@@ -299,15 +308,20 @@
 
             // Display uploaded icon (or fallback to placeholder)
             const displayIcon = document.getElementById('display-icon');
+            const memberAvatar = document.getElementById('member-avatar');
+            
             if (iconFile) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     displayIcon.src = e.target.result;
+                    memberAvatar.src = e.target.result;
                 }
                 reader.readAsDataURL(iconFile);
             } else {
                 // Default placeholder if no picture selected
-                displayIcon.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=fee2e2&color=ef4444";
+                const avatarUrl = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=fee2e2&color=ef4444";
+                displayIcon.src = avatarUrl;
+                memberAvatar.src = avatarUrl;
             }
 
             // Load uploads
@@ -382,7 +396,10 @@
             if (photoFile) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    // Add upload to array
+                    const memberName = document.getElementById('display-name').textContent;
+                    const memberCycle = document.getElementById('display-cycle').textContent;
+                    
+                    // Add upload to member's personal array
                     memberUploads.push({
                         category: currentUploadCategory,
                         month: month,
@@ -391,8 +408,24 @@
                         uploadedAt: new Date().toISOString()
                     });
                     
-                    // Save to localStorage
+                    // Save to member's personal storage
                     localStorage.setItem('memberUploads', JSON.stringify(memberUploads));
+                    
+                    // Also save to shared storage for admin to see
+                    const sharedUploads = localStorage.getItem('sharedMemberUploads');
+                    const allUploads = sharedUploads ? JSON.parse(sharedUploads) : [];
+                    
+                    allUploads.push({
+                        memberName: memberName,
+                        cycle: memberCycle,
+                        category: currentUploadCategory,
+                        month: month,
+                        date: date,
+                        image: event.target.result,
+                        uploadedAt: new Date().toISOString()
+                    });
+                    
+                    localStorage.setItem('sharedMemberUploads', JSON.stringify(allUploads));
                     
                     // Display uploads
                     displayUploads();

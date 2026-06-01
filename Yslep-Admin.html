@@ -133,47 +133,8 @@
         </div>
     </div>
 
-    <!-- Logic to render mock data -->
+    <!-- Logic to render real member data -->
     <script>
-        // Mock Data representing what would be fetched from a database
-        const mockUploads = [
-            { id: 1, name: "Maria Clara", cycle: "Cycle 1", category: "Social Apostolate", month: "June", image: "https://images.unsplash.com/photo-1593113565694-c8c360db2dc0?auto=format&fit=crop&w=400&q=80", status: "Reviewed" },
-            { id: 2, name: "Juan Dela Cruz", cycle: "Cycle 2", category: "Parish Involvement", month: "June", image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=400&q=80", status: "Pending" },
-            { id: 3, name: "Jose Rizal", cycle: "Cycle 1", category: "Social Apostolate", month: "May", image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=400&q=80", status: "Reviewed" },
-            { id: 4, name: "Andres Bonifacio", cycle: "Cycle 3", category: "Parish Involvement", month: "May", image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=400&q=80", status: "Pending" },
-        ];
-
-        // Update Statistics
-        document.getElementById('stat-total').textContent = mockUploads.length;
-        document.getElementById('stat-parish').textContent = mockUploads.filter(u => u.category === "Parish Involvement").length;
-        document.getElementById('stat-social').textContent = mockUploads.filter(u => u.category === "Social Apostolate").length;
-
-        // Render Table Data
-        const tableBody = document.getElementById('table-body');
-
-        mockUploads.forEach(upload => {
-            const statusColor = upload.status === "Reviewed" ? "bg-emerald-100 text-emerald-700" : "bg-yellow-100 text-yellow-700";
-            const categoryBadge = upload.category === "Parish Involvement" ? "bg-rose-100 text-rose-700" : "bg-red-100 text-red-700";
-
-            const row = document.createElement('tr');
-            row.className = "hover:bg-rose-50/30 transition text-rose-900";
-            row.innerHTML = `
-                <td class="p-4 font-bold">${upload.name}</td>
-                <td class="p-4 text-sm font-medium text-rose-600">${upload.cycle}</td>
-                <td class="p-4">
-                    <span class="px-3 py-1 rounded-full text-xs font-bold ${categoryBadge}">${upload.category}</span>
-                </td>
-                <td class="p-4 font-medium">${upload.month}</td>
-                <td class="p-4 flex justify-center">
-                    <img src="${upload.image}" alt="Service Photo" onclick="openImageModal('${upload.image}')" class="w-16 h-12 object-cover rounded-lg border border-rose-200 cursor-pointer hover:border-red-400 hover:shadow-md transition">
-                </td>
-                <td class="p-4">
-                    <span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${upload.status}</span>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-
         // Image Modal Logic
         const imageModal = document.getElementById('image-modal');
         const fullSizeImage = document.getElementById('full-size-image');
@@ -186,6 +147,49 @@
         function closeImageModal() {
             imageModal.classList.add('hidden');
             fullSizeImage.src = "";
+        }
+
+        // Load real member uploads from shared storage
+        function loadMemberUploads() {
+            const sharedUploads = localStorage.getItem('sharedMemberUploads');
+            const uploads = sharedUploads ? JSON.parse(sharedUploads) : [];
+            
+            // Update Statistics
+            document.getElementById('stat-total').textContent = uploads.length;
+            document.getElementById('stat-parish').textContent = uploads.filter(u => u.category === "Parish Involvement").length;
+            document.getElementById('stat-social').textContent = uploads.filter(u => u.category === "Social Apostolate").length;
+
+            // Render Table Data
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = '';
+
+            if (uploads.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-rose-500 text-sm">No uploads yet. Members will appear here as they upload photos.</td></tr>';
+                return;
+            }
+
+            uploads.forEach((upload, index) => {
+                const statusColor = "bg-emerald-100 text-emerald-700"; // All are auto-marked as reviewed
+                const categoryBadge = upload.category === "Parish Involvement" ? "bg-rose-100 text-rose-700" : "bg-red-100 text-red-700";
+
+                const row = document.createElement('tr');
+                row.className = "hover:bg-rose-50/30 transition text-rose-900";
+                row.innerHTML = `
+                    <td class="p-4 font-bold">${upload.memberName}</td>
+                    <td class="p-4 text-sm font-medium text-rose-600">${upload.cycle}</td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${categoryBadge}">${upload.category}</span>
+                    </td>
+                    <td class="p-4 font-medium">${upload.month}</td>
+                    <td class="p-4 flex justify-center">
+                        <img src="${upload.image}" alt="Service Photo" onclick="openImageModal('${upload.image}')" class="w-16 h-12 object-cover rounded-lg border border-rose-200 cursor-pointer hover:border-red-400 hover:shadow-md transition">
+                    </td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">Reviewed</span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
         }
 
         // Admin Portal Navigation Functions
@@ -209,6 +213,8 @@
                 // Redirect to home if no admin session
                 window.location.href = 'index.html';
             }
+            // Load member uploads
+            loadMemberUploads();
         });
     </script>
 </body>
